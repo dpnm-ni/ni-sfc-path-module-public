@@ -1,0 +1,84 @@
+---
+swagger: "2.0"
+info:
+  description: "NI SFC SFC Path Selection Module for the NI project."
+  version: "1.0.0"
+  title: "NI SFC Path Selection Module"
+#host: "virtserver.swaggerhub.com"
+#basePath: "/dylee90/ni-sfc-sub-module/1.0.0"
+tags:
+- name: "ni_sfc_sub_module"
+  description: "Perform management decisions using ML algorithms."
+schemes:
+- "https"
+- "http"
+paths:
+  /path_selection/q_learning:
+    post:
+      tags:
+      - "SFC Path Selection"
+      summary: "sfc path selection using q-learning"
+      description: ""
+      operationId: "q_learning_sfc"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC Info. should be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/SFCInfo"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/random:
+    post:
+      tags:
+      - "SFC Path Selection"
+      summary: "sfc path selection randomly"
+      description: ""
+      operationId: "random_sfc"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC Info. should be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/SFCInfo"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "server.controllers.default_controller"
+definitions:
+  SFCInfo:
+    type: "object"
+    properties:
+      sfcr_name:
+        type: "string"
+      sfc_prefix:
+        type: "string"
+      sfc_vnfs:
+        type: "array"
+        items:
+          type: "string"
+      sfc_name:
+        type: "string"
+externalDocs:
+  description: "Find out more about DPNM NI."
+  url: "http://dpnm.postech.ac.kr/"

@@ -1,0 +1,4 @@
+ni_mon:
+  host: #http://<ni_mon_ip>:<ni_mon_port>
+ni_nfvo:
+  host: #http://<ni_nfvo_ip>:<ni_nfvo_port>
