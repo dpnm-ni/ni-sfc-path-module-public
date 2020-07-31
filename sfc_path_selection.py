@@ -53,14 +53,14 @@ def get_nfvo_sfcr_api():
 # get_ip_from_vm(vm_id):
 # Input: vm instance id
 # Output: port IP of the data plane
-def get_ip_from_id(vm_id):
+def get_ip_from_id(vm_id, openstack_network_id):
 
     ni_mon_api = get_monitoring_api()
     query = ni_mon_api.get_vnf_instance(vm_id)
 
-    ## Hard coding for network id of the data plane
+    ## Get ip address of specific network 
     ports = query.ports
-    network_id = "52b3b564-0be1-49f2-9b67-1cee170acbdb"
+    network_id = openstack_network_id
 
     for port in ports:
         if port.network_id == network_id:
