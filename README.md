@@ -20,18 +20,18 @@ pip3 install -r requirements.txt
 ## Usage
 If you installed all requirements in advance, you can run this module by using the command as below.
 ```
-python3 -m swagger_server
+python3 -m server
 ```
 and open your browser to here:
 
 ```
-http://localhost:8888/ui/
+http://localhost:8001/ui/
 ```
 
 Your Swagger definition lives here:
 
 ```
-http://localhost:8888/swagger.json
+http://localhost:8001/swagger.json
 ```
 
 This module will be integrated with ni-ai-module. Further, this module design comes from ni-nfvo-module and ni-ai-module. So, if you want to know detailed design, you can see the modules. 
