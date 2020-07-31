@@ -13,7 +13,7 @@ Python 3.5.2+
 Please install pip3 and requirements by using the command as below. 
 ```
 sudo apt-get update
-sudo apt-get insatll python3-pip
+sudo apt-get install python3-pip
 pip3 install -r requirements.txt
 ```
 
