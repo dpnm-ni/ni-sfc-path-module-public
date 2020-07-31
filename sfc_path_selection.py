@@ -11,6 +11,18 @@ import random
 import numpy as np
 import datetime as dt
 
+
+# Parameters
+# OpenStack Parameters
+openstack_network_id = "" # Insert OpenStack Network ID to be used for creating SFC
+
+# <Important!!!!> parameters for Reinforcement Learning (Q-learning in this codes)
+learning_rate = 0.10         # Learning rate
+discount_factor = 0.60       # Discount factor
+initial_epsilon = 0.90       # epsilon value of -greedy algorithm
+num_episode = 3000           # Number of iteration for Q-learning
+
+
 # get_monitoring_api(): get ni_monitoring_client api to interact with a monitoring module
 # Input: null
 # Output: monitoring moudle's client api
@@ -53,12 +65,12 @@ def get_nfvo_sfcr_api():
 # get_ip_from_vm(vm_id):
 # Input: vm instance id
 # Output: port IP of the data plane
-def get_ip_from_id(vm_id, openstack_network_id):
+def get_ip_from_id(vm_id):
 
     ni_mon_api = get_monitoring_api()
     query = ni_mon_api.get_vnf_instance(vm_id)
 
-    ## Get ip address of specific network 
+    ## Get ip address of specific network
     ports = query.ports
     network_id = openstack_network_id
 
@@ -414,11 +426,10 @@ def sfc_path_selection(Q, epsilon, eta, gamma, pi, resources, vnfi_list, num_vnf
 # Output: flow classifier id, sfc id
 def q_based_sfc(sfc_info):
 
-    # <Important!!!!> parameters for Reinforcement Learning (Q-learning in this codes)
-    eta = 0.10       # Learning rate
-    gamma = 0.60     # Discount factor
-    epsilon = 0.90   # epsilon value of -greedy algorithm
-    episode = 3000   # Number of iteration for Q-learning
+    eta = learning_rate       # Learning rate
+    gamma = discount_factor     # Discount factor
+    epsilon = initial_epsilon   # epsilon value of -greedy algorithm
+    episode = num_episode   # Number of iteration for Q-learning
 
     ## Step 1: Get VNF instance Info
     vnfi_info = get_vnf_info(sfc_info.sfc_prefix, sfc_info.sfc_vnfs)
