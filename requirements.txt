@@ -2,7 +2,7 @@ connexion == 1.1.15
 python_dateutil == 2.6.0
 setuptools >= 21.0.0
 werkzeug == 0.16.1
-numpy == 1.18,0
+numpy == 1.18.0
 
 git+https://github.com/dpnm-ni/ni-mano#subdirectory=ni_mon_client_api
 git+https://github.com/dpnm-ni/ni-mano#subdirectory=ni_nfvo_client_api
