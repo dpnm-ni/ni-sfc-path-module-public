@@ -7,7 +7,7 @@ Random or RL-based SFC path selection module.
 
 ## Requirements
 ```
-Python 3.5.2+
+Python 3.6.0+
 ```
 
 Please install pip3 and requirements by using the command as below. 
