@@ -37,9 +37,9 @@ In ni-mano, ni_mon and ni_nvfo are responsible for interacting with this module 
 ```
 # config/config.yaml
 ni_mon:
-  host: http://<ni_mon_ip>:<ni_mon_port> # Configure here to interact with a monitoring module
+  host: http://<ni_mon_ip>:<ni_mon_port>      # Configure here to interact with a monitoring module
 ni_nfvo:
-  host: http://<ni_nfvo_ip>:<ni_nfvo_port> # Configure here to interact with an NFVO module
+  host: http://<ni_nfvo_ip>:<ni_nfvo_port>    # Configure here to interact with an NFVO module
 ```
 
 Before running this module, OpenStack network ID should be configured because VNF instances in OpenStack can have multiple network interfaces.
@@ -51,7 +51,7 @@ Moreover, Q-learning hyper-parameters can be configured as follows (they have de
 
 # Parameters
 # OpenStack Parameters
-openstack_network_id = "" # Insert OpenStack Network ID to be used for creating SFC
+openstack_network_id = ""    # Insert OpenStack Network ID to be used for creating SFC
 
 # <Important!!!!> parameters for Reinforcement Learning (Q-learning in this codes)
 learning_rate = 0.10         # Learning rate
@@ -62,22 +62,23 @@ num_episode = 3000           # Number of iteration for Q-learning
 
 ## Usage
 
+After installation and configuration of this module, you can run this module by using the command as follows.
+
 ```
 python3 -m server
 ```
 
-If you installed all requirements in advance, you can run this module by using the command as below.
-```
-python3 -m server
-```
-and open your browser to here:
+This module provides web UI based on Swagger:
 
 ```
-http://localhost:8001/ui/
+http://<host IP running this module>:<port number>/ui/
 ```
 
-Your Swagger definition lives here:
+To create an SFC in OpenStack testbed, this module processes a HTTP POST message including SFCInfo data in its body.
+You can generate an SFC request by using web UI or using other library creating HTTP messages.
+If you create and send a HTTP POST message to this module, the destination URI is as follows.
 
 ```
-http://localhost:8001/swagger.json
+http://<host IP running this module>:<port number>/path_selection/q_learning    # Chhose and create an optimal SFC path using Q-learning
+http://<host IP running this module>:<port number>/path_selection/random        # Choose and create an SFC path randomly
 ```
