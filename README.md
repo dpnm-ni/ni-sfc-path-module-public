@@ -1,4 +1,5 @@
 # ni-sfc-path-module-public
+NI-SFC-Path-Module creates SFC by selecting VNFs running from the OpenStack testbed. 
 
 ## Main Responsibilities
 Random or RL-based SFC path selection module.
@@ -43,7 +44,7 @@ ni_nfvo:
 ```
 
 Before running this module, OpenStack network ID should be configured because VNF instances in OpenStack can have multiple network interfaces.
-This module uses openstack_network_id value to identify a network interface used to crate an SFC.
+This module uses *openstack_network_id* value to identify a network interface used to crate an SFC.
 Moreover, Q-learning hyper-parameters can be configured as follows (they have default values).
 
 ```
@@ -79,7 +80,7 @@ You can generate an SFC request by using web UI or using other library creating 
 If you create and send a HTTP POST message to this module, the destination URI is as follows.
 
 ```
-# Chhose and create an optimal SFC path using Q-learning
+# Choose and create an optimal SFC path using Q-learning
 http://<host IP running this module>:<port number>/path_selection/q_learning
 
 # Choose and create an SFC path randomly
@@ -89,12 +90,12 @@ http://<host IP running this module>:<port number>/path_selection/random
 Required data to create SFC is defined in SFCInfo model that is JSON format data.
 The SFCInfo model consits of 4 data as follows.
 
-- sfc_name: a name of SFC identified by OpenStack
-- sfc_prefix: a prefix to identify instances which can be components of an SFC from OpenStack
-- sfc_vnfs: a string array including a flow classifier name and name of each VNF instance in order
-- sfcr_name: a name of flow classifier identified by OpenStack
+- **sfc_name**: a name of SFC identified by OpenStack
+- **sfc_prefix**: a prefix to identify instances which can be components of an SFC from OpenStack
+- **sfc_vnfs**: a string array including a flow classifier name and name of each VNF instance in order
+- **sfcr_name**: a name of flow classifier identified by OpenStack
 
-For example, if an SFC request includes SFCInfo data as follows, this module identifies an instance of which name is test-client as a flow classifier and VNF instances of which name starts with test-firewall and test-dpi to create an SFC.
+For example, if an SFC request includes SFCInfo data as follows, this module identifies an instance of which name is *test-client* as a flow classifier and VNF instances of which name starts with *test-firewall* and *test-dpi* to create an SFC.
 
 ```
     {
