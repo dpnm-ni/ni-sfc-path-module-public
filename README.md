@@ -1,5 +1,5 @@
 # ni-sfc-path-module-public
-NI-SFC-Path-Module creates SFC by selecting VNFs running from the OpenStack testbed. 
+NI-SFC-Path-Module-Public creates SFC by selecting VNFs running from the OpenStack testbed. 
 
 ## Main Responsibilities
 Random or RL-based SFC path selection module.
