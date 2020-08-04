@@ -24,6 +24,7 @@ To use a web UI of this module or send an SFC request to the module, a port numb
 
 ```
 # server/__main__.py
+
 def main():
     app = connexion.App(__name__, specification_dir='./swagger/')
     app.app.json_encoder = encoder.JSONEncoder
@@ -37,6 +38,7 @@ In ni-mano, ni_mon and ni_nvfo are responsible for interacting with this module 
 
 ```
 # config/config.yaml
+
 ni_mon:
   host: http://<ni_mon_ip>:<ni_mon_port>      # Configure here to interact with a monitoring module
 ni_nfvo:
