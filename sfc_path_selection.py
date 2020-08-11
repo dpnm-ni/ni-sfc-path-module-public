@@ -402,7 +402,9 @@ def sfc_path_selection(Q, epsilon, eta, gamma, pi, resources, vnfi_list, num_vnf
             r = (0.35*r_cpu) + (0.15*r_memory) + (0.5*r_location) ## CPU intensive (weights: CPU 0.35, Memory 0.15, Location 0.5)
         elif "dpi" in vnfi_name or "ids" in vnfi_name:
             r = (0.15*r_cpu) + (0.35*r_memory) + (0.5*r_location) ## Memory intensive (weights: CPU 0.15, Memory 0.35, location 0.5)
-
+        else:
+            r = (0.40*r_cpu) + (0.30*r_memory) + (0.30*r_location) ## Others
+            
         s_a_history.append([next_state, np.nan]) # Adding next state into the history
 
         # Update Q-value
