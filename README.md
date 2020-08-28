@@ -90,7 +90,7 @@ http://<host IP running this module>:<port number>/path_selection/random
 ```
 
 Required data to create SFC is defined in SFCInfo model that is JSON format data.
-The SFCInfo model consits of 4 data as follows.
+The SFCInfo model consists of 4 data as follows.
 
 - **sfc_name**: a name of SFC identified by OpenStack
 - **sfc_prefix**: a prefix to identify instances which can be components of an SFC from OpenStack
