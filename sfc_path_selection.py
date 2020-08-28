@@ -19,7 +19,7 @@ openstack_network_id = "" # Insert OpenStack Network ID to be used for creating 
 # <Important!!!!> parameters for Reinforcement Learning (Q-learning in this codes)
 learning_rate = 0.10         # Learning rate
 discount_factor = 0.60       # Discount factor
-initial_epsilon = 0.90       # epsilon value of -greedy algorithm
+initial_epsilon = 0.90       # epsilon value of e-greedy algorithm
 num_episode = 3000           # Number of iteration for Q-learning
 
 
