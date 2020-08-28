@@ -46,7 +46,7 @@ ni_nfvo:
 ```
 
 Before running this module, OpenStack network ID should be configured because VNF instances in OpenStack can have multiple network interfaces.
-This module uses *openstack_network_id* value to identify a network interface used to crate an SFC.
+This module uses *openstack_network_id* value to identify a network interface used to create an SFC.
 Moreover, Q-learning hyper-parameters can be configured as follows (they have default values).
 
 ```
