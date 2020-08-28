@@ -34,7 +34,7 @@ def main():
 
 This module interacts with ni-mano to create SFC in OpenStack environment.
 To communicate with ni-mano, this module should know URI of ni-mano.
-In ni-mano, ni_mon and ni_nvfo are responsible for interacting with this module so their URI should be configured as follows.
+In ni-mano, ni_mon and ni_nfvo are responsible for interacting with this module so their URI should be configured as follows.
 
 ```
 # config/config.yaml
