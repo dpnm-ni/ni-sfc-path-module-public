@@ -15,10 +15,7 @@ schemes:
 paths:
   /path_selection/q_learning:
     post:
-      tags:
-      - "SFC Path Selection"
       summary: "sfc path selection using q-learning"
-      description: ""
       operationId: "q_learning_sfc"
       consumes:
       - "application/json"
@@ -41,11 +38,104 @@ paths:
       x-swagger-router-controller: "server.controllers.default_controller"
   /path_selection/random:
     post:
-      tags:
-      - "SFC Path Selection"
       summary: "sfc path selection randomly"
-      description: ""
       operationId: "random_sfc"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC Info. should be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/SFCInfo"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/custom:
+    post:
+      summary: "customized sfc path selection (Possible to select multiple VNFs in each tier)"
+      operationId: "custom_sfc"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC Info_Custom should be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/SFCInfo_Custom"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/dqn:
+    post:
+      summary: "sfc path selection by DQN"
+      operationId: "dqn_sfc"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC Info. should be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/SFCInfo"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/del_dqn_training/{id}:
+    delete:
+      summary: "Remove a DQN training process."
+      operationId: "del_dqn_training"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Success."
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/get_training_process:
+    get:
+      summary: "Return training process IDs"
+      operationId: "get_training_process"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Training_process"
+      x-swagger-router-controller: "server.controllers.default_controller"
+  /path_selection/dqn_training:
+    post:
+      summary: "Training a DQN model"
+      description: ""
+      operationId: "dqn_training"
       consumes:
       - "application/json"
       produces:
@@ -79,6 +169,31 @@ definitions:
           type: "string"
       sfc_name:
         type: "string"
+  SFCInfo_Custom:
+    type: "object"
+    properties:
+      sfcr_name:
+        type: "string"
+      sfc_prefix:
+        type: "string"
+      sfc_vnfs:
+        type: "array"
+        items:
+          type: "string"
+      number_of_vnfs:
+        type: "array"
+        items:
+          type: "number"
+      sfc_name:
+        type: "string"
+  Training_process:
+    type: "object"
+    properties:
+      id:
+        type: "array"
+        description: "List of process ids"
+        items:
+          type: "string"
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"

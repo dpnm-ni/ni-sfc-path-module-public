@@ -1,4 +1,14 @@
 ni_mon:
-  host: #http://<ni_mon_ip>:<ni_mon_port>
+  host: http://<ni_mon_ip>:<ni_mon_port>      # Configure here to interact with a monitoring module
 ni_nfvo:
-  host: #http://<ni_nfvo_ip>:<ni_nfvo_port>
+  host: http://<ni_nfvo_ip>:<ni_nfvo_port>    # Configure here to interact with an NFVO module
+instance:
+  monitor: <IP of a monitoring instance>      # IP of traffic generator (i.e., VM instance that has a public IP address)
+  id: <ssh_id of a monitoring instance>       # SSH ID of new VNF instance
+  password: <ssh_id of a monitoring instance> # SSH ID of new VNF instance
+image:                                        # Image IDs used by OpenStack
+  firewall: <OpenStack Image ID>
+  flowmonitor: <OpenStack Image ID>
+  dpi: <OpenStack Image ID>
+  ids: <OpenStack Image ID>
+  proxy: <OpenStack Image ID>

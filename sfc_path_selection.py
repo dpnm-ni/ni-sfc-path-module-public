@@ -10,16 +10,18 @@ from server.models.sfc_info import SFCInfo
 import random
 import numpy as np
 import datetime as dt
-
+from pprint import pprint
+import subprocess
+import csv
 
 # Parameters
 # OpenStack Parameters
-openstack_network_id = "" # Insert OpenStack Network ID to be used for creating SFC
+openstack_network_id = "9cdee37a-fdcd-45f5-860b-253fc62ce578" # Insert OpenStack Network ID to be used for creating SFC
 
 # <Important!!!!> parameters for Reinforcement Learning (Q-learning in this codes)
-learning_rate = 0.10         # Learning rate
-discount_factor = 0.60       # Discount factor
-initial_epsilon = 0.90       # epsilon value of e-greedy algorithm
+learning_rate = 0.01         # Learning rate
+discount_factor = 0.98       # Discount factor
+initial_epsilon = 0.10       # epsilon value of e-greedy algorithm
 num_episode = 3000           # Number of iteration for Q-learning
 
 
@@ -131,7 +133,6 @@ def get_vnf_resources(vnfi_list):
     # Query to get resource data
     for vnfi in vnfi_list:
         i = vnfi_list.index(vnfi)
-
         for type in resource_type:
             j = resource_type.index(type)
 
@@ -141,8 +142,13 @@ def get_vnf_resources(vnfi_list):
             start_time = end_time - dt.timedelta(seconds = 10)
 
             response = ni_mon_api.get_measurement(vnf_id, measurement_type, start_time, end_time)
-            resources[i, j] = response[-1].measurement_value
-
+            #pprint(len(response))
+            '''
+            if len(response) == 0:
+                resources[i, j] = 95
+            else:
+                resources[i, j] = response[-1].measurement_value
+            '''
             # Calculate CPU utilization as persent
             if j == 0:
                 resources[i, j] = resources[i, j]
@@ -258,6 +264,35 @@ def set_sfc(sfcr_id, sfc_name, sfc_path, vnfi_info):
 
     return api_response
 
+
+# set_custom_sfc(sfcr_id, sfc_name, sfc_path, vnfi_list): create custom sfc in the testbed
+# Input: flowclassifier name, sfc name, sfc path, vnfi_info
+# Output: response
+def set_custom_sfc(sfcr_id, sfc_name, sfc_path, vnfi_info):
+
+    ni_nfvo_sfc_api = get_nfvo_sfc_api()
+    vnf_names = [ vnfi.name for vnfi in vnfi_info ]
+
+    vnf_instance_ids= []
+
+    for vnf_list in sfc_path:
+        if sfc_path.index(vnf_list) == 0:
+            continue
+
+        temp = []
+        for vnf in vnf_list:
+            index = vnf_names.index(vnf)
+            temp.append(vnfi_info[index].id)
+
+        vnf_instance_ids.append(temp)
+
+    sfc_spec = ni_nfvo_client.SfcSpec(sfc_name=sfc_name,
+                                   sfcr_ids=[ sfcr_id ],
+                                   vnf_instance_ids=vnf_instance_ids)
+
+    api_response = ni_nfvo_sfc_api.set_sfc(sfc_spec)
+
+    return api_response
 
 
 # set_action_policy(theta): define initial action policy
@@ -404,7 +439,7 @@ def sfc_path_selection(Q, epsilon, eta, gamma, pi, resources, vnfi_list, num_vnf
             r = (0.15*r_cpu) + (0.35*r_memory) + (0.5*r_location) ## Memory intensive (weights: CPU 0.15, Memory 0.35, location 0.5)
         else:
             r = (0.40*r_cpu) + (0.30*r_memory) + (0.30*r_location) ## Others
-            
+
         s_a_history.append([next_state, np.nan]) # Adding next state into the history
 
         # Update Q-value
@@ -464,7 +499,7 @@ def q_based_sfc(sfc_info):
     for i in range(0, len(s_a_history)):
         sfc_path.append(vnfi_list[s_a_history[i][0]].name)
 
-    print(sfc_path)
+    pprint(sfc_path)
 
     ## Step 5: Create sfc in the real environment
     # create flow classifier
@@ -508,7 +543,7 @@ def random_sfc(sfc_info):
         sfc_path.append(random.choice(vnfi_list[start:end]).name)
         start = start + num_vnf_type[i]
 
-    print(sfc_path)
+    pprint(sfc_path)
 
     # Get flow classifier's id
     for vnfi in vnfi_list:
@@ -521,6 +556,49 @@ def random_sfc(sfc_info):
 
     sfcr_id = set_flow_classifier(sfc_info.sfcr_name, src_ip_prefix, sfc_info.sfc_vnfs, source_client)
     sfc_id = set_sfc(sfcr_id, sfc_info.sfc_name, sfc_path, vnfi_list)
+
+    response = { "sfcr_id": sfcr_id,
+                 "sfc_id": sfc_id,
+                 "sfc_path": sfc_path }
+
+    return response
+
+
+# custom_sfc(sfcr_name, sfc_vnfs, sfc_name):
+# Input: JSON sfc_info (flowclassifier name, sfc vnfs with the number of instances, sfc name)
+# Output: flow classifier id, sfc id
+def custom_sfc(sfc_info):
+
+    ## Step 1: Get VNF instance Info
+    vnfi_info = get_vnf_info(sfc_info.sfc_prefix, sfc_info.sfc_vnfs)
+
+    vnfi_list = vnfi_info["vnfi_list"]
+    num_vnf_type = vnfi_info["num_vnf_type"]
+
+    # Random sfc path selection
+    start = 0
+    end = 0
+    sfc_path = []
+
+    for i in range(0, len(num_vnf_type)):
+        end = start + num_vnf_type[i]
+        selected_vnfs = [ vnfi.name for vnfi in random.sample(vnfi_list[start:end], sfc_info.number_of_vnfs[i]) ]
+        sfc_path.append(selected_vnfs)
+        start = start + num_vnf_type[i]
+
+    pprint(sfc_path)
+
+    # Get flow classifier's id
+    for vnfi in vnfi_list:
+        if vnfi.name == sfc_path[0][0]:
+            source_client = vnfi.id
+            break
+
+    # Extract ip prefix of a flow classifier
+    src_ip_prefix = get_ip_from_id(source_client) + "/32"
+
+    sfcr_id = set_flow_classifier(sfc_info.sfcr_name, src_ip_prefix, sfc_info.sfc_vnfs, source_client)
+    sfc_id = set_custom_sfc(sfcr_id, sfc_info.sfc_name, sfc_path, vnfi_list)
 
     response = { "sfcr_id": sfcr_id,
                  "sfc_id": sfc_id,
